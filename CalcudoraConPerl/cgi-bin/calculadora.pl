@@ -17,7 +17,7 @@ if (defined $operacion && $operacion ne '') {
 sub evaluar {
     my ($expresion) = @_;
 
-    $expresion =~ s/[^0-9+\-\*\/\(\)\s]//g; 
+    $expresion =~ s/[^0-9+\-\*\/\(\)\s\*\*]//g; 
 
     my @tokens = tokenizar($expresion);
     my @salida = infija_a_postfija(@tokens);
@@ -28,7 +28,7 @@ sub evaluar {
 
 sub tokenizar {
     my ($expresion) = @_;
-    my @tokens = ($expresion =~ /(\d+|\+|\-|\*|\/|\(|\))/g);  
+    my @tokens = ($expresion =~ /(\d+|\*\*|\+|\-|\*|\/|\(|\))/g);  
     return @tokens;
 }
 
@@ -38,10 +38,11 @@ sub infija_a_postfija {
     my @stack;
 
     my %precedencia = (
-        '+' => 1,
-        '-' => 1,
-        '*' => 2,
-        '/' => 2,
+        '+'  => 1,
+        '-'  => 1,
+        '*'  => 2,
+        '/'  => 2,
+        '**' => 3,
     );
 
     for my $token (@tokens) {
@@ -84,6 +85,8 @@ sub evaluar_rpn {
                 push @pila, $a * $b;
             } elsif ($token eq '/') {
                 push @pila, $b == 0 ? "No se puede dividir por cero" : $a / $b;
+            } elsif ($token eq '**') {
+                push @pila, $a ** $b;
             }
         }
     }
