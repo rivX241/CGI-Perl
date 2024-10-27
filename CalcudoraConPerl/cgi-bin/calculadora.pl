@@ -17,7 +17,6 @@ if (defined $operacion && $operacion ne '') {
 sub evaluar {
     my ($expresion) = @_;
 
-    # Permitir solo números, operadores, paréntesis y espacios
     $expresion =~ s/[^0-9+\-\*\/\(\)\s]//g; 
 
     my @tokens = tokenizar($expresion);
